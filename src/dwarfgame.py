@@ -989,6 +989,7 @@ gameObjectCollection.append(['PLAYROOM', 'DWARF_AXE', True, 600, 600])
 gameObjectCollection.append(['THRONE_ROOM', 'DWARF_SHIELD', True, 1400, 1000])
 gameObjectCollection.append(['THRONE_HALLWAY', 'HEART_ICON', True, door_x2_throne-50, door_y2_throne+250])
 
+
 # Render areas of the game depending on what area 
 # of the game the human player is in 
 def renderGameAreas_OnCondition(roomDescIn):
@@ -1946,39 +1947,71 @@ def detectbc1_leftside_col():
 	
 	global humanDwarf
 	
+	# A seperate collection for each object in the game
+	boxCrateCollection = [ ]
+	axeCollection = [ ]
+	heartCollection = [ ]
+	shieldCollection = [ ]
+	
+	# Seperate objects out into their seperate collections
+	for gameobject in gameObjectCollection:
+		if gameobject[1] == 'BOX_CRATE':
+			boxCrateCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_AXE':
+			axeCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_SHIELD':
+			shieldCollection.append(gameobject)
+		if gameobject[1] == 'HEART_ICON':
+			heartCollection.append(gameobject)
+	
 	cCounter = 0
 	
-	while cCounter < len(gameObjectCollection):
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'BOX_CRATE':
-			boxx = gameObjectCollection[cCounter][3]
-			boxy = gameObjectCollection[cCounter][4]
+	# Check to see if there has been a collision with the box crates
+	while cCounter < len(boxCrateCollection):
+		if boxCrateCollection[cCounter][0] == humanDwarf.location:
+			boxx = boxCrateCollection[cCounter][3]
+			boxy = boxCrateCollection[cCounter][4]
 			
 			if boxx <= (humanDwarf.x+20) and boxx > (humanDwarf.x-78) and(humanDwarf.y+18) >= boxy and humanDwarf.y <= (boxy+115):
 				return True # Return True as box-crate perm there
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'DWARF_AXE' and gameObjectCollection[cCounter][2] == True:
-			axex = gameObjectCollection[cCounter][3]
-			axey = gameObjectCollection[cCounter][4]
+		cCounter = cCounter + 1
+		
+	# Reset counter
+	cCounter = 0
+	
+	# Check to see if there has been collision with any of the axes	
+	while cCounter < len(axeCollection):
+		if axeCollection[cCounter][0] == humanDwarf.location and axeCollection[cCounter][2] == True:
+			axex = axeCollection[cCounter][3]
+			axey = axeCollection[cCounter][4]
 			
 			if axex <= (humanDwarf.x) and axey >= (humanDwarf.y-50) and axey < humanDwarf.y:
 				moveFloorRight()
 				
 				gameObjectCollection[cCounter][2] = False
+				axeCollection[cCounter][2] = False
 				humanDwarf.hasAxe = True
 				
 				return False # Return False as object dissapears
 				
+		cCounter = cCounter + 1
 		
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'HEART_ICON' and gameObjectCollection[cCounter][2] == True:
-			heartx = gameObjectCollection[cCounter][3]
-			hearty = gameObjectCollection[cCounter][4]
+	# Reset Counter
+	cCounter = 0
+	
+	while cCounter < len(heartCollection):
+		if heartCollection[cCounter][0] == humanDwarf.location and heartCollection[cCounter][2] == True:
+			heartx = heartCollection[cCounter][3]
+			hearty = heartCollection[cCounter][4]
 			
 			if humanDwarf.x >= (heartx-10) and humanDwarf.y <= (hearty+30):
 				gameObjectCollection[cCounter][2] = False
+				heartCollection[cCounter][2] = False
 				humanDwarf.energy = humanDwarf.energy + 25
 				
 				return False 
-							
+	
 		cCounter = cCounter + 1
 			
 	return False
@@ -1987,81 +2020,158 @@ def detectbc1_leftside_col():
 def detectbc1_rightside_col():
 	global humanDwarf
 	
-	cCounter = 0
+	# A seperate collection for each object in the game
+	boxCrateCollection = [ ]
+	axeCollection = [ ]
+	heartCollection = [ ]
+	shieldCollection = [ ]
 	
-	while cCounter < len(gameObjectCollection):
-		
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'BOX_CRATE':
-			boxx = gameObjectCollection[cCounter][3]
-			boxy = gameObjectCollection[cCounter][4]
+	# Seperate objects out into their seperate collections
+	for gameobject in gameObjectCollection:
+		if gameobject[1] == 'BOX_CRATE':
+			boxCrateCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_AXE':
+			axeCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_SHIELD':
+			shieldCollection.append(gameobject)
+		if gameobject[1] == 'HEART_ICON':
+			heartCollection.append(gameobject)
 
+	# Reset counter
+	cCounter = 0
+
+	# Check to see if there has been a collision with any of the box crates
+	while cCounter < len(boxCrateCollection):
+		if boxCrateCollection[cCounter][0] == humanDwarf.location:
+			boxx = boxCrateCollection[cCounter][3]
+			boxy = boxCrateCollection[cCounter][4]
+			
 			if boxx > (humanDwarf.x-122) and boxx < (humanDwarf.x+10) and (humanDwarf.y+18) >= boxy and humanDwarf.y <= (boxy+106):
 				return True
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'DWARF_AXE':
-			axex = gameObjectCollection[cCounter][3]
-			axey = gameObjectCollection[cCounter][4]
+		cCounter = cCounter + 1
+		
+	# Reset counter 
+	cCounter = 0
+	
+	# Check to see if there has been any collision with any axe objects
+	while cCounter < len(axeCollection):
+		if axeCollection[cCounter][0] == humanDwarf.location and axeCollection[cCounter][2] == True:
+			axex = axeCollection[cCounter][3]
+			axey = axeCollection[cCounter][4]
 			
 			if axex > (humanDwarf.x-70) and axey < (humanDwarf.y) and axey > (humanDwarf.y-50):
 				gameObjectCollection[cCounter][2] = False
+				axeCollection[cCounter][2] = False
 				humanDwarf.hasAxe = True
 				
 				return False
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'DWARF_SHIELD':
-			shieldx = gameObjectCollection[cCounter][3]
-			shieldy = gameObjectCollection[cCounter][4]
-
+		cCounter = cCounter + 1
+				
+	# Reset Counter
+	cCounter = 0
+	
+	# Check to see if any shield objects have been collected	
+	while cCounter < len(shieldCollection):
+		if shieldCollection[cCounter][0] == humanDwarf.location and shieldCollection[cCounter][2] == True:
+			shieldx = shieldCollection[cCounter][3]
+			shieldy = shieldCollection[cCounter][4]
+			
 			if shieldx > (330) and shieldy < humanDwarf.y and shieldy > (humanDwarf.y-50) and humanDwarf.hasAxe == True:
 				gameObjectCollection[cCounter][2] = False
+				shieldCollection[cCounter][2] = False
 				humanDwarf.hasShield = True
 				
 				return False
 				
 		cCounter = cCounter + 1
-		
+
 	return False
 
 # Bottom side collision detection function
 def detectbc1_bottomside_col():
 	global humanDwarf
 	
+	# A seperate collection for each object in the game
+	boxCrateCollection = [ ]
+	axeCollection = [ ]
+	heartCollection = [ ]
+	shieldCollection = [ ]
+	
+	# Seperate objects out into their seperate collections
+	for gameobject in gameObjectCollection:
+		if gameobject[1] == 'BOX_CRATE':
+			boxCrateCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_AXE':
+			axeCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_SHIELD':
+			shieldCollection.append(gameobject)
+		if gameobject[1] == 'HEART_ICON':
+			heartCollection.append(gameobject)
+			
+	# Reset counter	
 	cCounter = 0
 	
-	while cCounter < len(gameObjectCollection):
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'BOX_CRATE':
-			boxx = gameObjectCollection[cCounter][3]
-			boxy = gameObjectCollection[cCounter][4]
-
+	# Check to see if player has collided with any of the box-crates
+	while cCounter < len(boxCrateCollection):
+		if boxCrateCollection[cCounter][0] == humanDwarf.location:
+			boxx = boxCrateCollection[cCounter][3]
+			boxy = boxCrateCollection[cCounter][4]
+			
 			if boxy > (humanDwarf.y-120) and boxy < humanDwarf.y and boxx <= (humanDwarf.x+10) and boxx >= (humanDwarf.x-98):
 				return True
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'DWARF_AXE':
-			axex = gameObjectCollection[cCounter][3]
-			axey = gameObjectCollection[cCounter][4]
+		cCounter = cCounter + 1
+		
+	# Reset Counter
+	cCounter = 0
+	
+	# Check to see if player has collided with an axe object 
+	while cCounter < len(axeCollection):
+		if axeCollection[cCounter][0] == humanDwarf.location and axeCollection[cCounter][2] == True:
+			axex = axeCollection[cCounter][3]
+			axey = axeCollection[cCounter][4]
 			
 			if axex < humanDwarf.x and axex > (humanDwarf.x-50) and axey > (humanDwarf.y-50):
 				gameObjectCollection[cCounter][2] = False
+				axeCollection[cCounter][2] = False
 				humanDwarf.hasAxe = True
 				
 				return False
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'DWARF_SHIELD':
-			shieldx = gameObjectCollection[cCounter][3]
-			shieldy = gameObjectCollection[cCounter][4]
+		cCounter = cCounter + 1
+		
+	# Reset Counter
+	cCounter = 0
+	
+	# Check to see if player has collided with a shield object
+	while cCounter < len(shieldCollection):
+		if shieldCollection[cCounter][0] == humanDwarf.location and shieldCollection[cCounter][2] == True:
+			shieldx = shieldCollection[cCounter][3]
+			shieldy = shieldCollection[cCounter][4]
 			
 			if shieldy > (humanDwarf.y-70) and shieldx > 330:
 				gameObjectCollection[cCounter][2] = False
+				shieldCollection[cCounter][2] = False
 				humanDwarf.hasShield = True
 				
 				return False
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'HEART_ICON' and gameObjectCollection[cCounter][2] == True:
-			heartx = gameObjectCollection[cCounter][3]
-			hearty = gameObjectCollection[cCounter][4]
+		cCounter = cCounter + 1
+		
+	# Reset Counter
+	cCounter = 0
+	
+	# Check to see if player has collided with a heart object
+	while cCounter < len(heartCollection):
+		if heartCollection[cCounter][0] == humanDwarf.location and heartCollection[cCounter][2] == True:
+			heartx = heartCollection[cCounter][3]
+			hearty = heartCollection[cCounter][4]
 			
 			if humanDwarf.x >= (heartx-10) and humanDwarf.y <= (hearty+30):
 				gameObjectCollection[cCounter][2] = False
+				heartCollection[cCounter][2] = False
 				humanDwarf.energy = humanDwarf.energy + 25
 				
 				return False 
@@ -2075,35 +2185,70 @@ def detectbc1_bottomside_col():
 def detectbc1_topside_col():
 	global humanDwarf
 	
+	# A seperate collection for each object in the game
+	boxCrateCollection = [ ]
+	axeCollection = [ ]
+	heartCollection = [ ]
+	shieldCollection = [ ]
+	
+	# Seperate objects out into their seperate collections
+	for gameobject in gameObjectCollection:
+		if gameobject[1] == 'BOX_CRATE':
+			boxCrateCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_AXE':
+			axeCollection.append(gameobject)
+		if gameobject[1] == 'DWARF_SHIELD':
+			shieldCollection.append(gameobject)
+		if gameobject[1] == 'HEART_ICON':
+			heartCollection.append(gameobject)
+	
 	cCounter = 0
-	while cCounter < len(gameObjectCollection):
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'BOX_CRATE':
-			boxx = gameObjectCollection[cCounter][3]
-			boxy = gameObjectCollection[cCounter][4]
-
+	
+	# Check to see if player has collided with a box crate object
+	while cCounter < len(boxCrateCollection):
+		if boxCrateCollection[cCounter][0] == humanDwarf.location:
+			boxx = boxCrateCollection[cCounter][3]
+			boxy = boxCrateCollection[cCounter][4]
+			
 			if boxy < (humanDwarf.y+22) and boxy > (humanDwarf.y-98) and boxx < (humanDwarf.x+6) and boxx > (humanDwarf.x-114):
-				return True			
+				return True	
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'DWARF_AXE':
-			axex = gameObjectCollection[cCounter][3]
-			axey = gameObjectCollection[cCounter][4]
+		cCounter = cCounter + 1
+		
+	# Reset counter
+	cCounter = 0
+	
+	# Check to see if player has collided with an axe object
+	while cCounter < len(axeCollection):
+		if axeCollection[cCounter][0] == humanDwarf.location and axeCollection[cCounter][2] == True:
+			axex = axeCollection[cCounter][3]
+			axey = axeCollection[cCounter][4]
 			
 			if axey <= (humanDwarf.y) and axex < humanDwarf.x and axex > humanDwarf.x-50:
 				gameObjectCollection[cCounter][2] = False
+				axeCollection[cCounter][2] = False
 				humanDwarf.hasAxe = True
 				
 				return False
 				
-		if gameObjectCollection[cCounter][0] == humanDwarf.location and gameObjectCollection[cCounter][1] == 'DWARF_SHIELD':
-			shieldx = gameObjectCollection[cCounter][3]
-			shieldy = gameObjectCollection[cCounter][4]
+		cCounter = cCounter + 1
+		
+	# Reset Counter
+	cCounter = 0
+	
+	# Check to see if a player has collided with a shield object
+	while cCounter < len(shieldCollection):
+		if shieldCollection[cCounter][0] == humanDwarf.location and shieldCollection[cCounter][2] == True:
+			shieldx = shieldCollection[cCounter][3]
+			shieldy = shieldCollection[cCounter][4]
 			
 			if shieldy <= humanDwarf.y and shieldx <= humanDwarf.x and shieldx >= (humanDwarf.x-50) and humanDwarf.hasAxe == True:
 				gameObjectCollection[cCounter][2] = False
+				shieldCollection[cCounter][2] = False
 				humanDwarf.hasShield = True
 				
 				return False
-			
+				
 		cCounter = cCounter + 1
 			
 	return False
